@@ -199,28 +199,16 @@ class UserController {
   //dados da session storage
   selectAll() {
     //let users = Users.getUserStoragi();
-    let ajax = new XMLHttpRequest();
-    let obj = { users: [] };
 
-    try {
-      ajax.open("GET", " /users");
-    } catch (error) {
-      console.log(error);
-    }
-
-    ajax.onload = (event) => {
-      obj = JSON.parse(ajax.responseText);
-
-      obj.users.forEach((dataUser) => {
+    HttpRequest.get("/users").then((data) => {
+      data.users.forEach((dataUser) => {
         let user = new Users();
 
         user.loadFromJson(dataUser);
 
         this.addLine(user);
       });
-    };
-
-    ajax.send();
+    });
   }
 
   //add as lnhas la na tabela
