@@ -50,17 +50,17 @@ class UserController {
 
           user.loadFromJson(result);
 
-          user.save();
+          user.save().then((user) => {
+            this.getTr(user, tr);
 
-          this.getTr(user, tr);
+            this.updateCount();
 
-          this.updateCount();
+            this.formUpdateEl.reset();
 
-          this.formUpdateEl.reset();
+            this.showPanelCreate();
 
-          this.showPanelCreate();
-
-          btn.disabled = false;
+            btn.disabled = false;
+          });
         },
         (err) => {
           console.error("error: ", err);
@@ -90,12 +90,13 @@ class UserController {
         (content) => {
           values.photo = content;
 
-          values.save();
-          this.addLine(values);
+          values.save().then((user) => {
+            this.addLine(user);
 
-          this.formEl.reset();
+            this.formEl.reset();
 
-          btn.disabled = false;
+            btn.disabled = false;
+          });
         },
         (err) => {
           console.error("error: ", err);
@@ -198,8 +199,6 @@ class UserController {
 
   //dados da session storage
   selectAll() {
-    //let users = Users.getUserStoragi();
-
     HttpRequest.get("/users").then((data) => {
       data.users.forEach((dataUser) => {
         let user = new Users();
